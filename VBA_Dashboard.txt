@@ -1,0 +1,1856 @@
+Sub main()
+Call Macro1
+' (10) counting records of laptop and main and T4 list (common)
+rowscounter = Worksheets("list").Cells(Rows.Count, 1).End(xlUp).Row
+rowscountera = Worksheets("allocated").Cells(Rows.Count, 1).End(xlUp).Row
+rowscounteraback = Worksheets("allocated").Cells(Rows.Count, 1).End(xlUp).Row
+laptechnumbermix = Worksheets("Test Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+maintechnumbermix = Worksheets("Main Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+c4technumbermix = Worksheets("T4 Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+mobiletechnumbermix = Worksheets("Mobile Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+laptoprec = Worksheets("Laptop List").Cells(Rows.Count, 1).End(xlUp).Row
+mainrec = Worksheets("Main List").Cells(Rows.Count, 1).End(xlUp).Row
+c4rec = Worksheets("C4 List").Cells(Rows.Count, 1).End(xlUp).Row
+mobilerec = Worksheets("Mobile List").Cells(Rows.Count, 1).End(xlUp).Row
+finalallocated = Worksheets("Final allocated").Cells(Rows.Count, 1).End(xlUp).Row
+laptopreca = 0
+mainreca = 0
+c4reca = 0
+mobilereca = 0
+For i = 2 To finalallocated Step 1
+    If (Worksheets("Final allocated").Cells(i, 6) = "") Then
+        Worksheets("Final allocated").Rows(i).Delete
+    End If
+Next i
+
+For i = 2 To finalallocated Step 1
+    If (Worksheets("Final allocated").Cells(i, 5) = "TEST") Then
+        laptopreca = laptopreca + 1
+    ElseIf (Worksheets("Final allocated").Cells(i, 5) = "MAIN") Then
+        mainreca = mainreca + 1
+    ElseIf (Worksheets("Final allocated").Cells(i, 5) = "T4") Then
+        c4reca = c4reca + 1
+    ElseIf (Worksheets("Final allocated").Cells(i, 5) = "MOBILE") Then
+        mobilereca = mobilereca + 1
+    ElseIf (Worksheets("Final allocated").Cells(i, 5) = "TABLET") Then
+        mobilereca = mobilereca + 1
+    End If
+Next i
+
+laptoprecall = laptoprec - 1 + laptopreca
+mainrecall = mainrec - 1 + mainreca
+c4recall = c4rec - 1 + c4reca
+mobilerecall = mobilerec - 1 + mobilereca
+
+laptoprecallback = laptoprec - 1 + laptopreca
+mainrecallback = mainrec - 1 + mainreca
+c4recallback = c4rec - 1 + c4reca
+mobilerecallback = mobilerec - 1 + mobilereca
+
+laptoprecback = Worksheets("Laptop List").Cells(Rows.Count, 1).End(xlUp).Row
+mainrecback = Worksheets("Main List").Cells(Rows.Count, 1).End(xlUp).Row
+c4recback = Worksheets("C4 List").Cells(Rows.Count, 1).End(xlUp).Row
+mobilerecback = Worksheets("Mobile List").Cells(Rows.Count, 1).End(xlUp).Row
+
+
+
+' (11) checking technician from (common)
+For j = 2 To laptechnumbermix Step 1
+    If Worksheets("Test Technician Form").Cells(j, 3).Value = "û" Then
+        Worksheets("Test Technician Form").Cells(j, 4).Value = 0
+        Worksheets("Test Technician Form").Cells(j, 6).Value = 0
+    End If
+    If Worksheets("Test Technician Form").Cells(j, 6).Value = "" Then
+        Worksheets("Test Technician Form").Cells(j, 6).Value = "-"
+    End If
+Next j
+
+For j = 2 To maintechnumbermix Step 1
+    If Worksheets("Main Technician Form").Cells(j, 3).Value = "û" Then
+        Worksheets("Main Technician Form").Cells(j, 4).Value = 0
+        Worksheets("Main Technician Form").Cells(j, 6).Value = 0
+    End If
+    If Worksheets("Main Technician Form").Cells(j, 6).Value = "" Then
+        Worksheets("Main Technician Form").Cells(j, 6).Value = "-"
+    End If
+Next j
+
+For j = 2 To c4technumbermix Step 1
+    If Worksheets("T4 Technician Form").Cells(j, 3).Value = "û" Then
+        Worksheets("T4 Technician Form").Cells(j, 4).Value = 0
+        Worksheets("T4 Technician Form").Cells(j, 6).Value = 0
+    End If
+    If Worksheets("T4 Technician Form").Cells(j, 6).Value = "" Then
+        Worksheets("T4 Technician Form").Cells(j, 6).Value = "-"
+    End If
+Next j
+
+For j = 2 To mobiletechnumbermix Step 1
+    If Worksheets("Mobile Technician Form").Cells(j, 3).Value = "û" Then
+        Worksheets("Mobile Technician Form").Cells(j, 4).Value = 0
+        Worksheets("Mobile Technician Form").Cells(j, 6).Value = 0
+    End If
+    If Worksheets("Mobile Technician Form").Cells(j, 6).Value = "" Then
+        Worksheets("Mobile Technician Form").Cells(j, 6).Value = "-"
+    End If
+Next j
+
+' (12) checking sumation of limited allocate for technician (common)
+counter = 0
+sumlimitlaptop = 0
+For j = 2 To laptechnumbermix Step 1
+    If IsNumeric(Worksheets("Test Technician Form").Cells(j, 6).Value) Then
+        counter = counter + 1
+    End If
+    If Worksheets("Test Technician Form").Cells(j, 19).Value > Worksheets("Test Technician Form").Cells(j, 6).Value Then
+        sumlimitlaptop = sumlimitlaptop + Worksheets("Test Technician Form").Cells(j, 19).Value
+    ElseIf IsNumeric(Worksheets("Test Technician Form").Cells(j, 6).Value) Then
+        sumlimitlaptop = sumlimitlaptop + Worksheets("Test Technician Form").Cells(j, 6).Value
+    End If
+Next j
+laptoptoday = 0
+For i = 2 To laptoprec Step 1
+    If Worksheets("Laptop List").Cells(i, 5).Value = 0 Then
+        laptoptoday = laptoptoday + 1
+    End If
+Next i
+If ((counter = (laptechnumbermix - 1)) And (sumlimitlaptop < (laptoprecall))) Then
+    If laptoptoday >= (laptoprecall - sumlimitlaptop) Then
+        For i = 1 To (laptoprecall - sumlimitlaptop) Step 1
+            Worksheets("Laptop List").Rows(laptoprec).Delete
+            laptoprec = laptoprec - 1
+            laptoprecall = laptoprecall - 1
+            laptoprecallback = laptoprecallback - 1
+        Next i
+    Else
+        MsgBox ("ÓÞÝ ÊÚííä ÔÏå ÈÑÇí Ê˜äÓíä åÇí Test ãÌÏÏÇ ˜ ÔæÏ !")
+        Worksheets("Laptop List").Delete
+        Worksheets("Main List").Delete
+        Worksheets("C4 List").Delete
+        Worksheets("Mobile List").Delete
+        Worksheets("Final allocated").Delete
+        End
+    End If
+End If
+
+counter = 0
+sumlimitmain = 0
+For j = 2 To maintechnumbermix Step 1
+    If IsNumeric(Worksheets("Main Technician Form").Cells(j, 6).Value) Then
+        counter = counter + 1
+    End If
+    If Worksheets("Main Technician Form").Cells(j, 19).Value > Worksheets("Main Technician Form").Cells(j, 6).Value Then
+        sumlimitmain = sumlimitmain + Worksheets("Main Technician Form").Cells(j, 19).Value
+    ElseIf IsNumeric(Worksheets("Main Technician Form").Cells(j, 6).Value) Then
+        sumlimitmain = sumlimitmain + Worksheets("Main Technician Form").Cells(j, 6).Value
+    End If
+Next j
+maintoday = 0
+For i = 2 To mainrec Step 1
+    If Worksheets("Main List").Cells(i, 5).Value = 0 Then
+        maintoday = maintoday + 1
+    End If
+Next i
+If ((counter = (maintechnumbermix - 1)) And (sumlimitmain < (mainrecall))) Then
+    If maintoday >= (mainrecall - sumlimitmain) Then
+            For i = 1 To (mainrecall - sumlimitmain) Step 1
+                Worksheets("Main List").Rows(mainrec).Delete
+                mainrec = mainrec - 1
+                mainrecall = mainrecall - 1
+                mainrecallback = mainrecallback - 1
+            Next i
+    Else
+        MsgBox ("ÓÞÝ ÊÚííä ÔÏå ÈÑÇí Ê˜äÓíä åÇí Main ãÌÏÏÇ ˜ ÔæÏ !")
+       Worksheets("Laptop List").Delete
+        Worksheets("Main List").Delete
+        Worksheets("C4 List").Delete
+        Worksheets("Mobile List").Delete
+        Worksheets("Final allocated").Delete
+        End
+    End If
+End If
+
+counter = 0
+sumlimitc4 = 0
+For j = 2 To c4technumbermix Step 1
+    If IsNumeric(Worksheets("T4 Technician Form").Cells(j, 6).Value) Then
+        counter = counter + 1
+    End If
+    If Worksheets("T4 Technician Form").Cells(j, 19).Value > Worksheets("T4 Technician Form").Cells(j, 6).Value Then
+        sumlimitc4 = sumlimitc4 + Worksheets("T4 Technician Form").Cells(j, 19).Value
+    ElseIf IsNumeric(Worksheets("T4 Technician Form").Cells(j, 6).Value) Then
+        sumlimitc4 = sumlimitc4 + Worksheets("T4 Technician Form").Cells(j, 6).Value
+    End If
+Next j
+c4today = 0
+For i = 2 To c4rec Step 1
+    If Worksheets("C4 List").Cells(i, 5).Value = 0 Then
+        c4today = c4today + 1
+    End If
+Next i
+If ((counter = (c4technumbermix - 1)) And (sumlimitc4 < (c4recall))) Then
+    If c4today >= (c4recall - sumlimitc4) Then
+            For i = 1 To (c4recall - sumlimitc4) Step 1
+                    Worksheets("C4 List").Rows(c4rec).Delete
+                    c4rec = c4rec - 1
+                    c4recall = c4recall - 1
+                    c4recallback = c4recallback - 1
+            Next i
+    Else
+        MsgBox ("ÓÞÝ ÊÚííä ÔÏå ÈÑÇí Ê˜äÓíä åÇí T4 ãÌÏÏÇ ˜ ÔæÏ !")
+        Worksheets("Laptop List").Delete
+        Worksheets("Main List").Delete
+        Worksheets("C4 List").Delete
+        Worksheets("Mobile List").Delete
+        Worksheets("Final allocated").Delete
+        End
+    End If
+End If
+
+counter = 0
+sumlimitmobile = 0
+For j = 2 To mobiletechnumbermix Step 1
+    If IsNumeric(Worksheets("Mobile Technician Form").Cells(j, 6).Value) Then
+        counter = counter + 1
+    End If
+    If Worksheets("Mobile Technician Form").Cells(j, 19).Value > Worksheets("Mobile Technician Form").Cells(j, 6).Value Then
+        sumlimitmobile = sumlimitmobile + Worksheets("Mobile Technician Form").Cells(j, 19).Value
+    ElseIf IsNumeric(Worksheets("Mobile Technician Form").Cells(j, 6).Value) Then
+        sumlimitmobile = sumlimitmobile + Worksheets("Mobile Technician Form").Cells(j, 6).Value
+    End If
+Next j
+mobiletoday = 0
+For i = 2 To mobilerec Step 1
+    If Worksheets("Mobile List").Cells(i, 5).Value = 0 Then
+        mobiletoday = mobiletoday + 1
+    End If
+Next i
+If ((counter = (mobiletechnumbermix - 1)) And (sumlimitmobile < (mobilerecall))) Then
+    If mobiletoday >= (mobilerecall - sumlimitmobile) Then
+            For i = 1 To (mobilerecall - sumlimitmobile) Step 1
+                    Worksheets("Mobile List").Rows(mobilerec).Delete
+                    mobilerec = mobilerec - 1
+                    mobilerecall = mobilerecall - 1
+                    mobilerecallback = mobilerecallback - 1
+            Next i
+    Else
+        MsgBox ("ÓÞÝ ÊÚííä ÔÏå ÈÑÇí Ê˜äÓíä åÇí Mobile ãÌÏÏÇ ˜ ÔæÏ !")
+        Worksheets("Laptop List").Delete
+        Worksheets("Main List").Delete
+        Worksheets("C4 List").Delete
+        Worksheets("Mobile List").Delete
+        Worksheets("Final allocated").Delete
+        End
+    End If
+End If
+
+' (13) generate random number for main and laptop and T4 list (common)    ===========ggggggggg==========
+Worksheets("Laptop List").Columns("H").Delete
+With Worksheets("Laptop List").Application.WorksheetFunction
+    For i = 1 To laptoprec - 1 Step 1
+start:
+        x = .RandBetween(1, laptoprec - 1)
+        If Worksheets("Laptop List").Cells(1 + x, 8).Value = "" Then
+            Worksheets("Laptop List").Cells(1 + x, 8).Value = i
+        Else
+            GoTo start
+        End If
+    Next i
+End With
+
+Worksheets("Main List").Columns("H").Delete
+With Worksheets("Main List").Application.WorksheetFunction
+    For i = 1 To mainrec - 1 Step 1
+starts:
+        x = .RandBetween(1, mainrec - 1)
+        If Worksheets("Main List").Cells(1 + x, 8).Value = "" Then
+            Worksheets("Main List").Cells(1 + x, 8).Value = i
+        Else
+            GoTo starts
+        End If
+    Next i
+End With
+
+Worksheets("C4 List").Columns("H").Delete
+With Worksheets("C4 List").Application.WorksheetFunction
+    For i = 1 To c4rec - 1 Step 1
+starts1:
+        x = .RandBetween(1, c4rec - 1)
+        If Worksheets("C4 List").Cells(1 + x, 8).Value = "" Then
+            Worksheets("C4 List").Cells(1 + x, 8).Value = i
+        Else
+            GoTo starts1
+        End If
+    Next i
+End With
+
+Worksheets("Mobile List").Columns("H").Delete
+With Worksheets("Mobile List").Application.WorksheetFunction
+    For i = 1 To mobilerec - 1 Step 1
+starts2:
+        x = .RandBetween(1, mobilerec - 1)
+        If Worksheets("Mobile List").Cells(1 + x, 8).Value = "" Then
+            Worksheets("Mobile List").Cells(1 + x, 8).Value = i
+        Else
+            GoTo starts2
+        End If
+    Next i
+End With
+
+
+
+' (14) check number of weight for test
+For i = 2 To laptechnumbermix Step 1
+    If (Worksheets("Test Technician Form").Cells(i, 3).Value = "ü") Then
+        If ((Not IsNumeric(Worksheets("Test Technician Form").Cells(i, 4).Value)) Or (Worksheets("Test Technician Form").Cells(i, 4).Value <= 1)) Then
+        Else
+            MsgBox ("ÏÑÕÏ ÊÎÕíÕ ÏÓÊÇå Èå Ê˜äÓíä åÇí Test Èíä 0 ÊÇ 1 äãíÈÇÔÏ !")
+            Worksheets("Laptop List").Delete
+            Worksheets("Main List").Delete
+            Worksheets("C4 List").Delete
+            Worksheets("Mobile List").Delete
+            Worksheets("Final allocated").Delete
+            End
+        End If
+    End If
+    If ((Worksheets("Test Technician Form").Cells(i, 3).Value = "ü") And (((Not IsNumeric(Worksheets("Test Technician Form").Cells(i, 4).Value)) Or (Worksheets("Test Technician Form").Cells(i, 4).Value = "")))) Then
+    Worksheets("Test Technician Form").Cells(i, 4).Value = 1
+    End If
+    If (Worksheets("Test Technician Form").Cells(i, 3).Value = "û") Then
+    Worksheets("Test Technician Form").Cells(i, 4).Value = 0
+    End If
+Next i
+' (14) calculation of weight
+
+allocatedlaptop = 0
+For i = 2 To laptechnumbermix Step 1
+    Worksheets("Test Technician Form").Cells(i, 18).Value = Worksheets("Test Technician Form").Cells(i, 4).Value
+Next i
+startt12:
+Point = 0
+sumation = 0
+For j = 1 To 7 Step 1
+    For i = 2 To laptechnumbermix Step 1
+        Worksheets("Test Technician Form").Cells(i, 20).Value = ""
+        Worksheets("Test Technician Form").Cells(i, 21).Value = ""
+        Worksheets("Test Technician Form").Cells(i, 22).Value = ""
+        Worksheets("Test Technician Form").Cells(i, 23).Value = ""
+    Next i
+Next j
+
+For i = 2 To laptechnumbermix Step 1
+    sumation = sumation + Worksheets("Test Technician Form").Cells(i, 18).Value
+Next i
+If sumation <> 0 Then
+    For i = 2 To laptechnumbermix Step 1
+        Worksheets("Test Technician Form").Cells(i, 20).Value = (Worksheets("Test Technician Form").Cells(i, 18).Value / sumation)
+        Worksheets("Test Technician Form").Cells(i, 21).Value = Application.WorksheetFunction.RoundDown((Worksheets("Test Technician Form").Cells(i, 20).Value * laptoprecall), 0)
+    Next i
+    
+    For i = 2 To laptechnumbermix Step 1
+        If Worksheets("Test Technician Form").Cells(i, 6).Value <= Worksheets("Test Technician Form").Cells(i, 21).Value Then
+            Worksheets("Test Technician Form").Cells(i, 22).Value = Worksheets("Test Technician Form").Cells(i, 6).Value
+        Else
+            Worksheets("Test Technician Form").Cells(i, 22).Value = Worksheets("Test Technician Form").Cells(i, 21).Value
+        End If
+    Next i
+    
+    For i = 2 To laptechnumbermix Step 1
+        Worksheets("Test Technician Form").Cells(i, 23).Value = Worksheets("Test Technician Form").Cells(i, 22).Value - Worksheets("Test Technician Form").Cells(i, 19).Value
+    Next i
+    
+    ' (14) strategy for face to different situatian test (limited allocate)
+    
+    For i = 2 To laptechnumbermix Step 1
+        If (((Worksheets("Test Technician Form").Cells(i, 23).Value <= 0) And ((Worksheets("Test Technician Form").Cells(i, 18).Value > 0) And (IsNumeric(Worksheets("Test Technician Form").Cells(i, 6).Value)))) Or ((Worksheets("Test Technician Form").Cells(i, 23).Value < 0) And (Worksheets("Test Technician Form").Cells(i, 18).Value = 0)) And (IsNumeric(Worksheets("Test Technician Form").Cells(i, 6).Value))) Then
+            laptoprecall = laptoprecall - Worksheets("Test Technician Form").Cells(i, 19).Value
+            Worksheets("Test Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Test Technician Form").Cells(i, 18).Value = 0
+            Point = 1
+        ElseIf (((Worksheets("Test Technician Form").Cells(i, 22).Value = Worksheets("Test Technician Form").Cells(i, 6).Value) And (Worksheets("Test Technician Form").Cells(i, 23).Value > 0) And (Worksheets("Test Technician Form").Cells(i, 18).Value > 0))) Then
+            Point = 1
+            allocatelaptop = Worksheets("Test Technician Form").Cells(i, 23).Value
+            For j = (allocatedlaptop + 1) To (allocatedlaptop + allocatelaptop) Step 1
+                For s = 2 To laptoprec Step 1
+                    If Worksheets("Laptop List").Cells(s, 8).Value = j Then
+                        Worksheets("Laptop List").Cells(s, 9).Value = Worksheets("Test Technician Form").Cells(i, 2).Value
+                    End If
+                Next s
+            Next j
+            allocatedlaptop = allocatedlaptop + allocatelaptop
+            laptoprecall = laptoprecall - allocatelaptop - Worksheets("Test Technician Form").Cells(i, 19).Value
+            Worksheets("Test Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Test Technician Form").Cells(i, 18).Value = 0
+        End If
+    Next i
+    If Point = 1 Then
+        GoTo startt12
+    End If
+End If
+
+' (14) strategy for face to different situatian test (without limited allocate)    ============check=============
+counter = 0
+If laptoprecall >= laptechnumbermix Then
+    For i = 2 To laptechnumbermix Step 1
+        If Worksheets("Test Technician Form").Cells(i, 23).Value = 0 Then
+            counter = counter + 1
+        End If
+    Next i
+    If counter = laptechnumbermix - 1 Then
+            For i = 2 To laptoprec Step 1
+                If Worksheets("Laptop List").Cells(i, 9).Value = "" Then
+                    Worksheets("Laptop List").Rows(i).Delete
+                    laptoprec = laptoprec - 1
+                    i = i - 1
+                End If
+            Next i
+    Else
+        For i = 2 To laptechnumbermix Step 1
+            laptoprecall = laptoprecall - Worksheets("Test Technician Form").Cells(i, 19).Value
+            Worksheets("Test Technician Form").Cells(i, 19).Value = 0
+        Next i
+        
+        For i = 2 To laptechnumbermix Step 1
+            allocatelaptop = Worksheets("Test Technician Form").Cells(i, 23).Value
+                For j = (allocatedlaptop + 1) To (allocatedlaptop + allocatelaptop) Step 1
+                    For s = 2 To laptoprec Step 1
+                        If Worksheets("Laptop List").Cells(s, 8).Value = j Then
+                            Worksheets("Laptop List").Cells(s, 9).Value = Worksheets("Test Technician Form").Cells(i, 2).Value
+                        End If
+                    Next s
+                Next j
+            allocatedlaptop = allocatedlaptop + allocatelaptop
+            laptoprecall = laptoprecall - allocatelaptop
+            Worksheets("Test Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Test Technician Form").Cells(i, 22).Value = 0
+            Worksheets("Test Technician Form").Cells(i, 21).Value = 0
+        Next i
+        If laptoprecall > 0 Then
+            With Worksheets("Test Technician Form").Application.WorksheetFunction
+            For i = (allocatedlaptop + 1) To (allocatedlaptop + laptoprecall) Step 1
+startt13:
+                x = .RandBetween(1, laptechnumbermix - 1)
+                If Worksheets("Test Technician Form").Cells(1 + x, 18).Value <> 0 Then
+                    For s = 2 To laptoprec Step 1
+                        If Worksheets("Laptop List").Cells(s, 8).Value = i Then
+                            Worksheets("Laptop List").Cells(s, 9).Value = Worksheets("Test Technician Form").Cells(1 + x, 2).Value
+                        End If
+                    Next s
+                Worksheets("Test Technician Form").Cells(1 + x, 18).Value = 0
+                Else
+                    GoTo startt13
+                End If
+            Next i
+            End With
+        End If
+    End If
+Else
+    If laptoprecall > 0 Then
+            With Worksheets("Test Technician Form").Application.WorksheetFunction
+            For i = (allocatedlaptop + 1) To (allocatedlaptop + laptoprecall) Step 1
+startt14:
+                x = .RandBetween(1, laptechnumbermix - 1)
+                If Worksheets("Test Technician Form").Cells(1 + x, 3).Value = "ü" Then
+                    For s = 2 To laptoprec Step 1
+                        If Worksheets("Laptop List").Cells(s, 8).Value = i Then
+                            Worksheets("Laptop List").Cells(s, 9).Value = Worksheets("Test Technician Form").Cells(1 + x, 2).Value
+                        End If
+                    Next s
+                Worksheets("Test Technician Form").Cells(1 + x, 23).Value = 0
+                Worksheets("Test Technician Form").Cells(1 + x, 18).Value = 0
+                Else
+                    GoTo startt14
+                End If
+            Next i
+        End With
+        End If
+    End If
+' (15) check number of weight for main (main)
+For i = 2 To maintechnumbermix Step 1
+    If (Worksheets("Main Technician Form").Cells(i, 3).Value = "ü") Then
+        If ((Not IsNumeric(Worksheets("Main Technician Form").Cells(i, 4).Value)) Or (Worksheets("Main Technician Form").Cells(i, 4).Value <= 1)) Then
+        Else
+            MsgBox ("ÏÑÕÏ ÊÎÕíÕ ÏÓÊÇå Èå Ê˜äÓíä åÇí Main Èíä 0 ÊÇ 1 äãíÈÇÔÏ !")
+            Worksheets("Laptop List").Delete
+            Worksheets("Main List").Delete
+            Worksheets("C4 List").Delete
+            Worksheets("Final allocated").Delete
+        End
+        End If
+    End If
+    If ((Worksheets("Main Technician Form").Cells(i, 3).Value = "ü") And (((Not IsNumeric(Worksheets("Main Technician Form").Cells(i, 4).Value)) Or (Worksheets("Main Technician Form").Cells(i, 4).Value = "")))) Then
+    Worksheets("Main Technician Form").Cells(i, 4).Value = 1
+    End If
+    If (Worksheets("Main Technician Form").Cells(i, 3).Value = "û") Then
+    Worksheets("Main Technician Form").Cells(i, 4).Value = 0
+    End If
+Next i
+
+
+
+' (15) calculation of weight (main)
+
+allocatedmain = 0
+For i = 2 To maintechnumbermix Step 1
+    Worksheets("Main Technician Form").Cells(i, 18).Value = Worksheets("Main Technician Form").Cells(i, 4).Value
+Next i
+startt22:
+Point = 0
+sumation = 0
+For j = 1 To 7 Step 1
+    For i = 2 To maintechnumbermix Step 1
+        Worksheets("Main Technician Form").Cells(i, 23).Value = ""
+        Worksheets("Main Technician Form").Cells(i, 22).Value = ""
+        Worksheets("Main Technician Form").Cells(i, 21).Value = ""
+        Worksheets("Main Technician Form").Cells(i, 20).Value = ""
+    Next i
+Next j
+
+For i = 2 To maintechnumbermix Step 1
+    sumation = sumation + Worksheets("Main Technician Form").Cells(i, 18).Value
+Next i
+If sumation <> 0 Then
+    For i = 2 To maintechnumbermix Step 1
+        Worksheets("Main Technician Form").Cells(i, 20).Value = (Worksheets("Main Technician Form").Cells(i, 18).Value / sumation)
+        Worksheets("Main Technician Form").Cells(i, 21).Value = Application.WorksheetFunction.RoundDown((Worksheets("Main Technician Form").Cells(i, 20).Value * mainrecall), 0)
+    Next i
+    
+    For i = 2 To maintechnumbermix Step 1
+        If Worksheets("Main Technician Form").Cells(i, 6).Value <= Worksheets("Main Technician Form").Cells(i, 21).Value Then
+            Worksheets("Main Technician Form").Cells(i, 22).Value = Worksheets("Main Technician Form").Cells(i, 6).Value
+        Else
+            Worksheets("Main Technician Form").Cells(i, 22).Value = Worksheets("Main Technician Form").Cells(i, 21).Value
+        End If
+    Next i
+    
+    For i = 2 To maintechnumbermix Step 1
+        Worksheets("Main Technician Form").Cells(i, 23).Value = Worksheets("Main Technician Form").Cells(i, 22).Value - Worksheets("Main Technician Form").Cells(i, 19).Value
+    Next i
+    
+    ' (15) strategy for face to different situatian main (limited allocate) (main)
+    
+    For i = 2 To maintechnumbermix Step 1
+        If (((Worksheets("Main Technician Form").Cells(i, 23).Value <= 0) And ((Worksheets("Main Technician Form").Cells(i, 18).Value > 0) And (IsNumeric(Worksheets("Main Technician Form").Cells(i, 6).Value)))) Or ((Worksheets("Main Technician Form").Cells(i, 23).Value < 0) And (Worksheets("Main Technician Form").Cells(i, 18).Value = 0)) And (IsNumeric(Worksheets("Main Technician Form").Cells(i, 6).Value))) Then
+            mainrecall = mainrecall - Worksheets("Main Technician Form").Cells(i, 19).Value
+            Worksheets("Main Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Main Technician Form").Cells(i, 18).Value = 0
+            Point = 1
+        ElseIf (((Worksheets("Main Technician Form").Cells(i, 22).Value = Worksheets("Main Technician Form").Cells(i, 6).Value) And (Worksheets("Main Technician Form").Cells(i, 23).Value > 0) And (Worksheets("Main Technician Form").Cells(i, 18).Value > 0))) Then
+            Point = 1
+            allocatemain = Worksheets("Main Technician Form").Cells(i, 23).Value
+            For j = (allocatedmain + 1) To (allocatedmain + allocatemain) Step 1
+                For s = 2 To mainrec Step 1
+                    If Worksheets("Main List").Cells(s, 8).Value = j Then
+                        Worksheets("Main List").Cells(s, 9).Value = Worksheets("Main Technician Form").Cells(i, 2).Value
+                    End If
+                Next s
+            Next j
+            allocatedmain = allocatedmain + allocatemain
+            mainrecall = mainrecall - allocatemain - Worksheets("Main Technician Form").Cells(i, 19).Value
+            Worksheets("Main Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Main Technician Form").Cells(i, 18).Value = 0
+        End If
+    Next i
+    If Point = 1 Then
+        GoTo startt22
+    End If
+End If
+
+' (15) strategy for face to different situatian main (without limited allocate)
+counter = 0
+If mainrecall >= maintechnumbermix Then
+    For i = 2 To maintechnumbermix Step 1
+        If Worksheets("Main Technician Form").Cells(i, 23).Value = 0 Then
+            counter = counter + 1
+        End If
+    Next i
+    If counter = maintechnumbermix - 1 Then
+            For i = 2 To mainrec Step 1
+                If Worksheets("Main List").Cells(i, 9).Value = "" Then
+                    Worksheets("Main List").Rows(i).Delete
+                    mainrec = mainrec - 1
+                    mainrecall = mainrecall - 1
+                End If
+            Next i
+    Else
+        For i = 2 To maintechnumbermix Step 1
+            mainrecall = mainrecall - Worksheets("Main Technician Form").Cells(i, 19).Value
+            Worksheets("Main Technician Form").Cells(i, 19).Value = 0
+        Next i
+        
+        For i = 2 To maintechnumbermix Step 1
+            allocatemain = Worksheets("Main Technician Form").Cells(i, 23).Value
+                For j = (allocatedmain + 1) To (allocatedmain + allocatemain) Step 1
+                    For s = 2 To mainrec Step 1
+                        If Worksheets("Main List").Cells(s, 8).Value = j Then
+                            Worksheets("Main List").Cells(s, 9).Value = Worksheets("Main Technician Form").Cells(i, 2).Value
+                        End If
+                    Next s
+                Next j
+            allocatedmain = allocatedmain + allocatemain
+            mainrecall = mainrecall - allocatemain
+            Worksheets("Main Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Main Technician Form").Cells(i, 22).Value = 0
+            Worksheets("Main Technician Form").Cells(i, 21).Value = 0
+        Next i
+    End If
+End If
+        '=====================
+            If mainrecall > 0 Then
+            countermain = 0
+            mainrecback = mainrec
+            Worksheets("Main List").Copy after:=Worksheets("Laptop List")
+            For i = 2 To mainrec Step 1
+                If ((Worksheets("Main List").Cells(i, 9).Value = "") And (Worksheets("Main List").Cells(i, 1).Value <> "")) Then
+                    Worksheets("Main List").Rows(i).Delete
+                    countermain = countermain + 1
+                    i = i - 1
+                End If
+            Next i
+        If countermain > 0 Then
+            counterm = 0
+            mainrecallnew = mainrec
+            mainrecnew = mainrec
+            For i = mainrecnew To (mainrecnew - countermain + 1) Step -1
+                Worksheets("Main List (2)").Rows(i).Delete
+                mainrecallnew = mainrecallnew - 1
+                mainrec = mainrec - 1
+                counterm = counterm + 1
+            Next i
+            If mainrecnew <> mainrecallnew Then
+                mainrecall = mainrecallback - counterm
+                mainrecallback = mainrecallback - counterm
+                Worksheets("Main List (2)").Columns("I").Delete
+                Worksheets("Main List (2)").Columns("H").Delete
+                Worksheets("Main List (2)").Columns("I").Value = Worksheets("Main List").Columns("I").Value
+                Worksheets("Main List").Delete
+                Worksheets("Main List (2)").Name = "Main List"
+            End If
+        End If
+End If
+        '=======================
+
+' (16) check number of weight for T4 (T4)
+For i = 2 To c4technumbermix Step 1
+    If (Worksheets("T4 Technician Form").Cells(i, 3).Value = "ü") Then
+        If ((Not IsNumeric(Worksheets("T4 Technician Form").Cells(i, 4).Value)) Or (Worksheets("T4 Technician Form").Cells(i, 4).Value <= 1)) Then
+        Else
+            MsgBox ("ÏÑÕÏ ÊÎÕíÕ ÏÓÊÇå Èå Ê˜äÓíä åÇí T4 Èíä 0 ÊÇ 1 äãíÈÇÔÏ !")
+            Worksheets("Laptop List").Delete
+            Worksheets("Main List").Delete
+            Worksheets("C4 List").Delete
+            Worksheets("Final allocated").Delete
+        End
+        End If
+    End If
+    If ((Worksheets("T4 Technician Form").Cells(i, 3).Value = "ü") And (((Not IsNumeric(Worksheets("T4 Technician Form").Cells(i, 4).Value)) Or (Worksheets("T4 Technician Form").Cells(i, 4).Value = "")))) Then
+    Worksheets("T4 Technician Form").Cells(i, 4).Value = 1
+    End If
+    If (Worksheets("T4 Technician Form").Cells(i, 3).Value = "û") Then
+    Worksheets("T4 Technician Form").Cells(i, 4).Value = 0
+    End If
+Next i
+' (16) calculation of weight (T4)
+
+allocatedc4 = 0
+For i = 2 To c4technumbermix Step 1
+    Worksheets("T4 Technician Form").Cells(i, 18).Value = Worksheets("T4 Technician Form").Cells(i, 4).Value
+Next i
+startt32:
+Point = 0
+sumation = 0
+For j = 1 To 7 Step 1
+    For i = 2 To c4technumbermix Step 1
+        Worksheets("T4 Technician Form").Cells(i, 20).Value = ""
+        Worksheets("T4 Technician Form").Cells(i, 21).Value = ""
+        Worksheets("T4 Technician Form").Cells(i, 22).Value = ""
+        Worksheets("T4 Technician Form").Cells(i, 23).Value = ""
+    Next i
+Next j
+For i = 2 To c4technumbermix Step 1
+    sumation = sumation + Worksheets("T4 Technician Form").Cells(i, 18).Value
+Next i
+For i = 2 To c4technumbermix Step 1
+    Worksheets("T4 Technician Form").Cells(i, 20).Value = (Worksheets("T4 Technician Form").Cells(i, 18).Value / sumation)
+    Worksheets("T4 Technician Form").Cells(i, 21).Value = Application.WorksheetFunction.RoundDown((Worksheets("T4 Technician Form").Cells(i, 20).Value * c4recall), 0)
+Next i
+
+For i = 2 To c4technumbermix Step 1
+    If Worksheets("T4 Technician Form").Cells(i, 6).Value <= Worksheets("T4 Technician Form").Cells(i, 21).Value Then
+        Worksheets("T4 Technician Form").Cells(i, 22).Value = Worksheets("T4 Technician Form").Cells(i, 6).Value
+    Else
+        Worksheets("T4 Technician Form").Cells(i, 22).Value = Worksheets("T4 Technician Form").Cells(i, 21).Value
+    End If
+Next i
+
+For i = 2 To c4technumbermix Step 1
+    Worksheets("T4 Technician Form").Cells(i, 23).Value = Worksheets("T4 Technician Form").Cells(i, 22).Value - Worksheets("T4 Technician Form").Cells(i, 19).Value
+Next i
+
+' (16) strategy for face to different situatian main (limited allocate) (T4)
+
+For i = 2 To c4technumbermix Step 1
+    If (((Worksheets("T4 Technician Form").Cells(i, 23).Value <= 0) And ((Worksheets("T4 Technician Form").Cells(i, 18).Value > 0) And (IsNumeric(Worksheets("T4 Technician Form").Cells(i, 6).Value)))) Or ((Worksheets("T4 Technician Form").Cells(i, 23).Value < 0) And (Worksheets("T4 Technician Form").Cells(i, 18).Value = 0)) And (IsNumeric(Worksheets("T4 Technician Form").Cells(i, 6).Value))) Then
+        c4recall = c4recall - Worksheets("T4 Technician Form").Cells(i, 19).Value
+        Worksheets("T4 Technician Form").Cells(i, 19).Value = 0
+        Worksheets("T4 Technician Form").Cells(i, 18).Value = 0
+        Point = 1
+    ElseIf (((Worksheets("T4 Technician Form").Cells(i, 22).Value = Worksheets("T4 Technician Form").Cells(i, 6).Value) And (Worksheets("T4 Technician Form").Cells(i, 23).Value > 0) And (Worksheets("T4 Technician Form").Cells(i, 18).Value > 0))) Then
+        Point = 1
+        allocatec4 = Worksheets("T4 Technician Form").Cells(i, 23).Value
+        For j = (allocatedc4 + 1) To (allocatedc4 + allocatec4) Step 1
+            For s = 2 To c4rec Step 1
+                If Worksheets("C4 List").Cells(s, 8).Value = j Then
+                    Worksheets("C4 List").Cells(s, 9).Value = Worksheets("T4 Technician Form").Cells(i, 2).Value
+                End If
+            Next s
+        Next j
+        allocatedc4 = allocatedc4 + allocatec4
+        c4recall = c4recall - allocatec4 - Worksheets("T4 Technician Form").Cells(i, 19).Value
+        Worksheets("T4 Technician Form").Cells(i, 19).Value = 0
+        Worksheets("T4 Technician Form").Cells(i, 18).Value = 0
+    End If
+Next i
+If Point = 1 Then
+    GoTo startt32
+End If
+
+' (16) strategy for face to different situatian T4 (without limited allocate) (T4)
+counter = 0
+If c4recall >= c4technumbermix Then
+    For i = 2 To c4technumbermix Step 1
+        If Worksheets("T4 Technician Form").Cells(i, 23).Value = 0 Then
+            counter = counter + 1
+        End If
+    Next i
+    If counter = c4technumbermix - 1 Then
+            For i = 2 To c4rec Step 1
+                If Worksheets("C4 List").Cells(i, 9).Value = "" Then
+                    Worksheets("C4 List").Rows(i).Delete
+                    c4rec = c4rec - 1
+                    c4recall = c4recall - 1
+                End If
+            Next i
+    Else
+        For i = 2 To c4technumbermix Step 1
+            c4recall = c4recall - Worksheets("T4 Technician Form").Cells(i, 19).Value
+            Worksheets("T4 Technician Form").Cells(i, 19).Value = 0
+        Next i
+        
+        For i = 2 To c4technumbermix Step 1
+            allocatec4 = Worksheets("T4 Technician Form").Cells(i, 23).Value
+                For j = (allocatedc4 + 1) To (allocatedc4 + allocatec4) Step 1
+                    For s = 2 To c4rec Step 1
+                        If Worksheets("C4 List").Cells(s, 8).Value = j Then
+                            Worksheets("C4 List").Cells(s, 9).Value = Worksheets("T4 Technician Form").Cells(i, 2).Value
+                        End If
+                    Next s
+                Next j
+            allocatedc4 = allocatedc4 + allocatec4
+            c4recall = c4recall - allocatec4
+            Worksheets("T4 Technician Form").Cells(i, 19).Value = 0
+            Worksheets("T4 Technician Form").Cells(i, 22).Value = 0
+            Worksheets("T4 Technician Form").Cells(i, 21).Value = 0
+        Next i
+    End If
+    If c4recall > 0 Then
+        With Worksheets("T4 Technician Form").Application.WorksheetFunction
+        For i = (allocatedc4 + 1) To (allocatedc4 + c4recall) Step 1
+startt33:
+            x = .RandBetween(1, c4technumbermix - 1)
+            If Worksheets("T4 Technician Form").Cells(1 + x, 18).Value <> 0 Then
+                For s = 2 To c4rec Step 1
+                    If Worksheets("C4 List").Cells(s, 8).Value = i Then
+                        Worksheets("C4 List").Cells(s, 9).Value = Worksheets("T4 Technician Form").Cells(1 + x, 2).Value
+                    End If
+                Next s
+            Worksheets("T4 Technician Form").Cells(1 + x, 18).Value = 0
+            Worksheets("T4 Technician Form").Cells(1 + x, 23).Value = 0
+            Else
+                GoTo startt33
+            End If
+        Next i
+    End With
+    End If
+Else
+     If c4recall > 0 Then
+        With Worksheets("T4 Technician Form").Application.WorksheetFunction
+        For i = (allocatedc4 + 1) To (allocatedc4 + c4recall) Step 1
+startt34:
+            x = .RandBetween(1, c4technumbermix - 1)
+            If Worksheets("T4 Technician Form").Cells(1 + x, 3).Value = "ü" Then
+                For s = 2 To c4rec Step 1
+                    If Worksheets("C4 List").Cells(s, 8).Value = i Then
+                        Worksheets("C4 List").Cells(s, 9).Value = Worksheets("T4 Technician Form").Cells(1 + x, 2).Value
+                    End If
+                Next s
+            Worksheets("T4 Technician Form").Cells(1 + x, 23).Value = 0
+            Else
+                GoTo startt34
+            End If
+        Next i
+    End With
+    End If
+End If
+
+' (17) check number of weight for mobile
+For i = 2 To mobiletechnumbermix Step 1
+    If (Worksheets("Mobile Technician Form").Cells(i, 3).Value = "ü") Then
+        If ((Not IsNumeric(Worksheets("Mobile Technician Form").Cells(i, 4).Value)) Or (Worksheets("Mobile Technician Form").Cells(i, 4).Value <= 1)) Then
+        Else
+            MsgBox ("ÏÑÕÏ ÊÎÕíÕ ÏÓÊÇå Èå Ê˜äÓíä åÇí Mobile Èíä 0 ÊÇ 1 äãíÈÇÔÏ !")
+            Worksheets("Laptop List").Delete
+            Worksheets("Main List").Delete
+            Worksheets("C4 List").Delete
+            Worksheets("Mobile List").Delete
+            Worksheets("Tablet List").Delete
+            Worksheets("Final allocated").Delete
+            End
+        End If
+    End If
+    If ((Worksheets("Mobile Technician Form").Cells(i, 3).Value = "ü") And (((Not IsNumeric(Worksheets("Mobile Technician Form").Cells(i, 4).Value)) Or (Worksheets("Mobile Technician Form").Cells(i, 4).Value = "")))) Then
+    Worksheets("Mobile Technician Form").Cells(i, 4).Value = 1
+    End If
+    If (Worksheets("Mobile Technician Form").Cells(i, 3).Value = "û") Then
+    Worksheets("Mobile Technician Form").Cells(i, 4).Value = 0
+    End If
+Next i
+' (17) calculation of weight
+
+allocatedmobile = 0
+For i = 2 To mobiletechnumbermix Step 1
+    Worksheets("Mobile Technician Form").Cells(i, 18).Value = Worksheets("Mobile Technician Form").Cells(i, 4).Value
+Next i
+startt42:
+Point = 0
+sumation = 0
+For j = 1 To 7 Step 1
+    For i = 2 To mobiletechnumbermix Step 1
+        Worksheets("Mobile Technician Form").Cells(i, 20).Value = ""
+        Worksheets("Mobile Technician Form").Cells(i, 21).Value = ""
+        Worksheets("Mobile Technician Form").Cells(i, 22).Value = ""
+        Worksheets("Mobile Technician Form").Cells(i, 23).Value = ""
+    Next i
+Next j
+
+For i = 2 To mobiletechnumbermix Step 1
+    sumation = sumation + Worksheets("Mobile Technician Form").Cells(i, 18).Value
+Next i
+If sumation <> 0 Then
+    For i = 2 To mobiletechnumbermix Step 1
+        Worksheets("Mobile Technician Form").Cells(i, 20).Value = (Worksheets("Mobile Technician Form").Cells(i, 18).Value / sumation)
+        Worksheets("Mobile Technician Form").Cells(i, 21).Value = Application.WorksheetFunction.RoundDown((Worksheets("Mobile Technician Form").Cells(i, 20).Value * mobilerecall), 0)
+    Next i
+    
+    For i = 2 To mobiletechnumbermix Step 1
+        If Worksheets("Mobile Technician Form").Cells(i, 6).Value <= Worksheets("Mobile Technician Form").Cells(i, 21).Value Then
+            Worksheets("Mobile Technician Form").Cells(i, 22).Value = Worksheets("Mobile Technician Form").Cells(i, 6).Value
+        Else
+            Worksheets("Mobile Technician Form").Cells(i, 22).Value = Worksheets("Mobile Technician Form").Cells(i, 21).Value
+        End If
+    Next i
+    
+    For i = 2 To mobiletechnumbermix Step 1
+        Worksheets("Mobile Technician Form").Cells(i, 23).Value = Worksheets("Mobile Technician Form").Cells(i, 22).Value - Worksheets("Mobile Technician Form").Cells(i, 19).Value
+    Next i
+    
+    ' (17) strategy for face to different situatian mobile (limited allocate)
+    
+    For i = 2 To mobiletechnumbermix Step 1
+        If (((Worksheets("Mobile Technician Form").Cells(i, 23).Value <= 0) And ((Worksheets("Mobile Technician Form").Cells(i, 18).Value > 0) And (IsNumeric(Worksheets("Mobile Technician Form").Cells(i, 6).Value)))) Or ((Worksheets("Mobile Technician Form").Cells(i, 23).Value < 0) And (Worksheets("Mobile Technician Form").Cells(i, 18).Value = 0)) And (IsNumeric(Worksheets("Mobile Technician Form").Cells(i, 6).Value))) Then
+            mobilerecall = mobilerecall - Worksheets("Mobile Technician Form").Cells(i, 19).Value
+            Worksheets("Mobile Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Mobile Technician Form").Cells(i, 18).Value = 0
+            Point = 1
+        ElseIf (((Worksheets("Mobile Technician Form").Cells(i, 22).Value = Worksheets("Mobile Technician Form").Cells(i, 6).Value) And (Worksheets("Mobile Technician Form").Cells(i, 23).Value > 0) And (Worksheets("Mobile Technician Form").Cells(i, 18).Value > 0))) Then
+            Point = 1
+            allocatemobile = Worksheets("Mobile Technician Form").Cells(i, 23).Value
+            For j = (allocatedmobile + 1) To (allocatedmobile + allocatemobile) Step 1
+                For s = 2 To mobilerec Step 1
+                    If Worksheets("Mobile List").Cells(s, 8).Value = j Then
+                        Worksheets("Mobile List").Cells(s, 9).Value = Worksheets("Mobile Technician Form").Cells(i, 2).Value
+                    End If
+                Next s
+            Next j
+            allocatedmobile = allocatedmobile + allocatemobile
+            mobilerecall = mobilerecall - allocatemobile - Worksheets("Mobile Technician Form").Cells(i, 19).Value
+            Worksheets("Mobile Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Mobile Technician Form").Cells(i, 18).Value = 0
+        End If
+    Next i
+    If Point = 1 Then
+        GoTo startt42
+    End If
+End If
+
+' (17) strategy for face to different situatian mobile (without limited allocate)    ============check=============
+counter = 0
+If mobilerecall >= mobiletechnumbermix Then
+    For i = 2 To mobiletechnumbermix Step 1
+        If Worksheets("Mobile Technician Form").Cells(i, 23).Value = 0 Then
+            counter = counter + 1
+        End If
+    Next i
+    If counter = mobiletechnumbermix - 1 Then
+            For i = 2 To mobilerec Step 1
+                If Worksheets("Mobile List").Cells(i, 9).Value = "" Then
+                    Worksheets("Mobile List").Rows(i).Delete
+                    mobilerec = mobilerec - 1
+                End If
+            Next i
+    Else
+        For i = 2 To mobiletechnumbermix Step 1
+            mobilerecall = mobilerecall - Worksheets("Mobile Technician Form").Cells(i, 19).Value
+            Worksheets("Mobile Technician Form").Cells(i, 19).Value = 0
+        Next i
+        
+        For i = 2 To mobiletechnumbermix Step 1
+            allocatemobile = Worksheets("Mobile Technician Form").Cells(i, 23).Value
+                For j = (allocatedmobile + 1) To (allocatedmobile + allocatemobile) Step 1
+                    For s = 2 To mobilerec Step 1
+                        If Worksheets("Mobile List").Cells(s, 8).Value = j Then
+                            Worksheets("Mobile List").Cells(s, 9).Value = Worksheets("Mobile Technician Form").Cells(i, 2).Value
+                        End If
+                    Next s
+                Next j
+            allocatedmobile = allocatedmobile + allocatemobile
+            mobilerecall = mobilerecall - allocatemobile
+            Worksheets("Mobile Technician Form").Cells(i, 19).Value = 0
+            Worksheets("Mobile Technician Form").Cells(i, 22).Value = 0
+            Worksheets("Mobile Technician Form").Cells(i, 21).Value = 0
+        Next i
+        If mobilerecall > 0 Then
+            With Worksheets("Mobile Technician Form").Application.WorksheetFunction
+            For i = (allocatedmobile + 1) To (allocatedmobile + mobilerecall) Step 1
+startt43:
+                x = .RandBetween(1, mobiletechnumbermix - 1)
+                If Worksheets("Mobile Technician Form").Cells(1 + x, 18).Value <> 0 Then
+                    For s = 2 To mobilerec Step 1
+                        If Worksheets("Mobile List").Cells(s, 8).Value = i Then
+                            Worksheets("Mobile List").Cells(s, 9).Value = Worksheets("Mobile Technician Form").Cells(1 + x, 2).Value
+                        End If
+                    Next s
+                Worksheets("Mobile Technician Form").Cells(1 + x, 23).Value = 0
+                Worksheets("Mobile Technician Form").Cells(1 + x, 18).Value = 0
+                Else
+                    GoTo startt43
+                End If
+            Next i
+            End With
+        End If
+    End If
+Else
+    If mobilerecall > 0 Then
+            With Worksheets("Mobile Technician Form").Application.WorksheetFunction
+            For i = (allocatedmobile + 1) To (allocatedmobile + mobilerecall) Step 1
+startt44:
+                x = .RandBetween(1, mobiletechnumbermix - 1)
+                If Worksheets("Mobile Technician Form").Cells(1 + x, 3).Value = "ü" Then
+                    For s = 2 To mobilerec Step 1
+                        If Worksheets("Mobile List").Cells(s, 8).Value = i Then
+                            Worksheets("Mobile List").Cells(s, 9).Value = Worksheets("Mobile Technician Form").Cells(1 + x, 2).Value
+                        End If
+                    Next s
+                Worksheets("Mobile Technician Form").Cells(1 + x, 23).Value = 0
+                Else
+                    GoTo startt44
+                End If
+            Next i
+        End With
+        End If
+    End If
+
+
+' (17) make Final Lists (common)
+Worksheets("C4 List").Copy after:=Worksheets("Mobile Technician Form")
+Worksheets("C4 List (2)").Name = "Final Lists"
+    Worksheets("Final Lists").Cells.Delete
+    Worksheets("Final Lists").Rows(1).Value = Worksheets("Laptop List").Rows(1).Value
+    Worksheets("Final Lists").Rows(laptoprecallback + 3).Value = Worksheets("Laptop List").Rows(1).Value
+    Worksheets("Final Lists").Rows(laptoprecallback + 3 + mainrecallback + 2).Value = Worksheets("Laptop List").Rows(1).Value
+    Worksheets("Final Lists").Rows(laptoprecallback + 3 + mainrecallback + 2 + c4recallback + 2).Value = Worksheets("Laptop List").Rows(1).Value
+
+    Worksheets("Final Lists").Range("A:A").EntireColumn.Insert
+    Worksheets("Final Lists").Range("A:A").EntireColumn.Insert
+    counter = 0
+    For i = 2 To (laptoprecallback + 1) Step 1
+        counter = counter + 1
+        Worksheets("Final Lists").Cells(i, 1).Value = counter
+    Next i
+    
+    For i = (laptoprecallback + 4) To (2 + laptoprecallback + 1 + mainrecallback) Step 1
+        counter = counter + 1
+        Worksheets("Final Lists").Cells(i, 1).Value = counter
+    Next i
+    
+    For i = (2 + laptoprecallback + 1 + mainrecallback + 3) To (2 + laptoprecallback + 1 + mainrecallback + 2 + c4recallback) Step 1
+        counter = counter + 1
+        Worksheets("Final Lists").Cells(i, 1).Value = counter
+    Next i
+    
+    For i = (2 + laptoprecallback + 1 + mainrecallback + 2 + c4recallback + 3) To (1 + laptoprecallback + 2 + mainrecallback + 2 + c4recallback + 2 + mobilerecallback) Step 1
+        counter = counter + 1
+        Worksheets("Final Lists").Cells(i, 1).Value = counter
+    Next i
+    
+' (18) insert technician's apps in final list (common)
+Dim pointeri As Integer
+Dim pointerr As Double
+counter = 1
+Point = 0
+pointer = 1
+pointeri = 1
+pointerr = 1
+For i = 2 To laptechnumbermix Step 1
+    pointeri = pointer / 2
+    pointerr = pointer / 2
+   
+    
+    For j = 2 To laptoprecback Step 1
+        If (Worksheets("Test Technician Form").Cells(i, 2).Value = Worksheets("Laptop List").Cells(j, 9).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Laptop List").Cells(j, 9).Value
+            
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Laptop List").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Laptop List").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Laptop List").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Laptop List").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Laptop List").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Laptop List").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    For j = 2 To rowscounteraback Step 1
+        If (Worksheets("Test Technician Form").Cells(i, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Final allocated").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 3).Interior.Color = RGB(193, 199, 202)
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Final allocated").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Final allocated").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Final allocated").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Final allocated").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    
+    If Point = 1 Then
+        pointer = pointer + 1
+        Point = 0
+    End If
+Next i
+
+
+counter = counter + 2
+For i = 2 To maintechnumbermix Step 1
+    pointeri = pointer / 2
+    pointerr = pointer / 2
+    For j = 2 To mainrecback Step 1
+        If (Worksheets("Main Technician Form").Cells(i, 2).Value = Worksheets("Main List").Cells(j, 9).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Main List").Cells(j, 9).Value
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Main List").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Main List").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Main List").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Main List").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Main List").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Main List").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    For j = 2 To rowscounteraback Step 1
+        If (Worksheets("Main Technician Form").Cells(i, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Final allocated").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 3).Interior.Color = RGB(193, 199, 202)
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Final allocated").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Final allocated").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Final allocated").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Final allocated").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    If Point = 1 Then
+        pointer = pointer + 1
+        Point = 0
+    End If
+Next i
+counter = counter + 2
+For i = 2 To c4technumbermix Step 1
+    pointeri = pointer / 2
+    pointerr = pointer / 2
+    For j = 2 To c4recback Step 1
+        If (Worksheets("T4 Technician Form").Cells(i, 2).Value = Worksheets("C4 List").Cells(j, 9).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("C4 List").Cells(j, 9).Value
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("C4 List").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("C4 List").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("C4 List").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("C4 List").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("C4 List").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("C4 List").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    For j = 2 To rowscounteraback Step 1
+        If (Worksheets("T4 Technician Form").Cells(i, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Final allocated").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 3).Interior.Color = RGB(193, 199, 202)
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Final allocated").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Final allocated").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Final allocated").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Final allocated").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    If Point = 1 Then
+        pointer = pointer + 1
+        Point = 0
+    End If
+Next i
+
+counter = counter + 2
+For i = 2 To mobiletechnumbermix Step 1
+    pointeri = pointer / 2
+    pointerr = pointer / 2
+    For j = 2 To mobilerecback Step 1
+        If (Worksheets("Mobile Technician Form").Cells(i, 2).Value = Worksheets("Mobile List").Cells(j, 9).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Mobile List").Cells(j, 9).Value
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Mobile List").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Mobile List").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Mobile List").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Mobile List").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Mobile List").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Mobile List").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    For j = 2 To rowscounteraback Step 1
+        If (Worksheets("Mobile Technician Form").Cells(i, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value) Then
+            counter = counter + 1
+            Worksheets("Final Lists").Cells(counter, 2).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            If (pointeri = pointerr) Then
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(255, 255, 255)
+            Else
+                Worksheets("Final Lists").Cells(counter, 2).Interior.Color = RGB(193, 199, 202)
+            End If
+            Worksheets("Final Lists").Cells(counter, 3).Value = Worksheets("Final allocated").Cells(j, 1).Value
+            Worksheets("Final Lists").Cells(counter, 3).Interior.Color = RGB(193, 199, 202)
+            Worksheets("Final Lists").Cells(counter, 4).Value = Worksheets("Final allocated").Cells(j, 2).Value
+            Worksheets("Final Lists").Cells(counter, 5).Value = Worksheets("Final allocated").Cells(j, 3).Value
+            Worksheets("Final Lists").Cells(counter, 6).Value = Worksheets("Final allocated").Cells(j, 4).Value
+            Worksheets("Final Lists").Cells(counter, 7).Value = Worksheets("Final allocated").Cells(j, 5).Value
+            Worksheets("Final Lists").Cells(counter, 8).Value = Worksheets("Final allocated").Cells(j, 6).Value
+            Point = 1
+        End If
+    Next j
+    If Point = 1 Then
+        pointer = pointer + 1
+        Point = 0
+    End If
+Next i
+
+
+Worksheets("Final Lists").Cells(1, 1).Value = Date
+Worksheets("Final Lists").Cells(laptoprecallback + 3, 1).Value = Date
+Worksheets("Final Lists").Cells(laptoprecallback + 3 + mainrecallback + 2, 1).Value = Date
+Worksheets("Final Lists").Cells(laptoprecallback + 3 + mainrecallback + 2 + c4recallback + 2, 1).Value = Date
+
+Worksheets("Final Lists").Cells(1, 2).Value = "äÇã Ê˜äÓíä (Test)"
+Worksheets("Final Lists").Cells(laptoprecallback + 3, 2).Value = "äÇã Ê˜äÓíä (Main)"
+Worksheets("Final Lists").Cells(laptoprecallback + 3 + mainrecallback + 2, 2).Value = "äÇã Ê˜äÓíä (T4)"
+Worksheets("Final Lists").Cells(laptoprecallback + 3 + mainrecallback + 2 + c4recallback + 2, 2).Value = "äÇã Ê˜äÓíä (Mobile)"
+
+Worksheets("Final Lists").Columns("A:F").ColumnWidth = 12
+Worksheets("Final Lists").Columns("A:F").RowHeight = 20
+Worksheets("Final Lists").Columns("A:F").VerticalAlignment = xlCenter
+Worksheets("Final Lists").Columns("A:F").HorizontalAlignment = xlCenter
+
+For i = 1 To (laptoprecallback + 1) Step 1
+    For j = 1 To 6 Step 1
+        Worksheets("Final Lists").Cells(i, j).Borders.LineStyle = xlContinuous
+    Next j
+Next i
+
+For i = (laptoprecallback + 3) To (2 + laptoprecallback + 1 + mainrecallback) Step 1
+    For j = 1 To 6 Step 1
+        Worksheets("Final Lists").Cells(i, j).Borders.LineStyle = xlContinuous
+    Next j
+Next i
+    
+For i = (1 + laptoprecallback + 1 + mainrecallback + 3) To (2 + laptoprecallback + 1 + mainrecallback + 2 + c4recallback) Step 1
+    For j = 1 To 6 Step 1
+        Worksheets("Final Lists").Cells(i, j).Borders.LineStyle = xlContinuous
+    Next j
+Next i
+
+For i = (2 + laptoprecallback + 1 + mainrecallback + 2 + c4recallback + 2) To (2 + laptoprecallback + 1 + mainrecallback + 2 + c4recallback + 2 + mobilerecallback) Step 1
+    For j = 1 To 6 Step 1
+        Worksheets("Final Lists").Cells(i, j).Borders.LineStyle = xlContinuous
+    Next j
+Next i
+Worksheets("Final Lists").Cells(1, 1).Interior.Color = RGB(103, 220, 97)
+Worksheets("Final Lists").Cells(laptoprecallback + 3, 1).Interior.Color = RGB(103, 220, 97)
+Worksheets("Final Lists").Cells(laptoprecallback + 3 + mainrecallback + 2, 1).Interior.Color = RGB(103, 220, 97)
+Worksheets("Final Lists").Cells(laptoprecallback + 3 + mainrecallback + 2 + c4recallback + 2, 1).Interior.Color = RGB(103, 220, 97)
+Call Macro2
+End Sub
+
+
+Sub Macro1()
+Dim counter As Integer
+    Dim i As Integer
+    Dim laptechnumberunlimited As Integer
+    Dim maintechnumberunlimited As Integer
+    Dim lapnumberallcate As Integer
+    Dim mainnumberallocate As Integer
+    Dim lapnumberextra As Integer
+    Dim mainnumberextra As Integer
+    Dim laptechnumbermix As Integer
+    Dim maintechnumbermix As Integer
+    Dim nameoftechlap As String
+    Dim nameoftechmain As String
+    Dim allocatedlap As Integer
+    Dim allocatedmain As Integer
+    Dim laptoprec As Integer
+    Dim mainrec As Integer
+    Dim str As String
+    Dim str1 As String
+    Dim size As Integer
+    Dim rowscounter As Long
+    Dim columnscounter As Long
+
+' (0) if exist other sheet, then delete it (common)
+For s = 1 To 5 Step 1
+    For i = 1 To Application.ActiveWorkbook.Sheets.Count
+            For j = 1 To 7 Step 1
+                On Error Resume Next
+                If Application.ActiveWorkbook.Sheets(i).Name = Worksheets("Control").Cells(3, j).Value Then
+                    counter = 1
+                End If
+            Next j
+        If counter = 0 Then
+        Application.DisplayAlerts = False 'switching off the alert button
+        Application.ActiveWorkbook.Sheets(i).Delete
+        End If
+        counter = 0
+    Next i
+Next s
+' (1)
+nameofwork = Application.ThisWorkbook.Name
+Workbooks(nameofwork).Sheets("sheet1").Cells(1, 1).Value = 1
+
+myfile = Application.GetOpenFilename(, , "Please searching for All")
+Workbooks.Open myfile
+nameofwork1 = Application.ActiveWorkbook.Name
+Workbooks(nameofwork1).Sheets(Workbooks(nameofwork1).Sheets.Count).Copy after:=Workbooks(nameofwork).Sheets("Mobile Technician Form")
+Workbooks(nameofwork).Sheets(Workbooks(nameofwork).Sheets.Count).Name = "list"
+Workbooks(nameofwork1).Close
+
+myfile = Application.GetOpenFilename(, , "Please searching for allocated")
+Workbooks.Open myfile
+nameofwork1 = Application.ActiveWorkbook.Name
+Workbooks(nameofwork1).Sheets(Workbooks(nameofwork1).Sheets.Count).Copy after:=Workbooks(nameofwork).Sheets("list")
+Workbooks(nameofwork).Sheets(Workbooks(nameofwork).Sheets.Count).Name = "allocated"
+Workbooks(nameofwork1).Close
+
+myfile = Application.GetOpenFilename(, , "Please searching for old all")
+Workbooks.Open myfile
+nameofwork1 = Application.ActiveWorkbook.Name
+Workbooks(nameofwork1).Sheets(Workbooks(nameofwork1).Sheets.Count).Copy after:=Workbooks(nameofwork).Sheets("allocated")
+Workbooks(nameofwork).Sheets(Workbooks(nameofwork).Sheets.Count).Name = "old all"
+Workbooks(nameofwork1).Close
+
+counter = 0
+
+For Each r In Worksheets("list").UsedRange.SpecialCells(xlCellTypeConstants)
+    If IsNumeric(r) Then
+       r.Value = CSng(r.Value)
+       r.NumberFormat = "General"
+    End If
+Next
+For Each r In Worksheets("old all").UsedRange.SpecialCells(xlCellTypeConstants)
+    If IsNumeric(r) Then
+       r.Value = CSng(r.Value)
+       r.NumberFormat = "General"
+    End If
+Next
+
+Worksheets("allocated").Cells(1, 9).Value = "ÔãÇÑå ÐíÑÔ"
+Worksheets("list").Cells(1, 4).Value = "ÔãÇÑå ÐíÑÔ"
+Worksheets("old all").Cells(1, 4).Value = "ÔãÇÑå ÐíÑÔ"
+
+' (1) for delete blank colunms (common)
+rowscounter = Worksheets("list").Cells(Rows.Count, 1).End(xlUp).Row
+rowscountera = Worksheets("allocated").Cells(Rows.Count, 1).End(xlUp).Row
+rowscounteroa = Worksheets("old all").Cells(Rows.Count, 1).End(xlUp).Row
+
+For i = 2 To rowscounter Step 1
+    If Worksheets("list").Cells(i, 10) = "APPLE" Then
+        Worksheets("list").Rows(i).Delete
+        i = i - 1
+        rowscounter = rowscounter - 1
+    End If
+Next i
+
+For i = 2 To rowscountera Step 1
+    If Worksheets("allocated").Cells(i, 18) = "APPLE" Then
+        Worksheets("allocated").Rows(i).Delete
+        i = i - 1
+        rowscountera = rowscountera - 1
+    End If
+Next i
+
+For i = 2 To rowscountera Step 1
+    For j = 2 To rowscounteroa Step 1
+        If (Worksheets("allocated").Cells(i, 9).Value = Worksheets("old all").Cells(j, 4)) And (Worksheets("allocated").Cells(i, 7).Value = "") Then
+            Worksheets("allocated").Rows(i).Delete
+            i = i - 1
+            rowscountera = rowscountera - 1
+        End If
+    Next j
+Next i
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("old all").Delete
+For i = 1 To 4 Step 1
+         Worksheets("Test Technician Form").Columns("S").Delete
+        Worksheets("Test Technician Form").Columns("T").Delete
+        Worksheets("Test Technician Form").Columns("U").Delete
+        Worksheets("Test Technician Form").Columns("V").Delete
+        Worksheets("Test Technician Form").Columns("W").Delete
+         Worksheets("Main Technician Form").Columns("S").Delete
+        Worksheets("Main Technician Form").Columns("T").Delete
+        Worksheets("Main Technician Form").Columns("U").Delete
+        Worksheets("Main Technician Form").Columns("V").Delete
+        Worksheets("Main Technician Form").Columns("W").Delete
+         Worksheets("T4 Technician Form").Columns("S").Delete
+        Worksheets("T4 Technician Form").Columns("T").Delete
+        Worksheets("T4 Technician Form").Columns("U").Delete
+        Worksheets("T4 Technician Form").Columns("V").Delete
+        Worksheets("T4 Technician Form").Columns("W").Delete
+         Worksheets("Mobile Technician Form").Columns("S").Delete
+        Worksheets("Mobile Technician Form").Columns("T").Delete
+        Worksheets("Mobile Technician Form").Columns("U").Delete
+        Worksheets("Mobile Technician Form").Columns("V").Delete
+        Worksheets("Mobile Technician Form").Columns("W").Delete
+Next i
+' (2) count all columns and rows in original sheet (common)
+
+rowscounter = Worksheets("list").Cells(Rows.Count, 1).End(xlUp).Row
+columnscounter = Worksheets("list").Cells(1, Columns.Count).End(xlToLeft).Column
+rowscountera = Worksheets("allocated").Cells(Rows.Count, 1).End(xlUp).Row
+rowscounteraback = Worksheets("allocated").Cells(Rows.Count, 1).End(xlUp).Row
+columnscountera = Worksheets("allocated").Cells(1, Columns.Count).End(xlToLeft).Column
+laptechnumbermix = Worksheets("Test Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+maintechnumbermix = Worksheets("Main Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+c4technumbermix = Worksheets("T4 Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+mobiletechnumbermix = Worksheets("Mobile Technician Form").Cells(Rows.Count, 1).End(xlUp).Row
+' (3) for delete blank rows and return's test from laptop list (common)
+  For i = rowscounter To 1 Step -1
+    If Worksheets("list").Cells(i, 1).Value = "" Then
+    Worksheets("list").Rows(i).Delete
+    End If
+  Next i
+  
+  For j = 2 To rowscounter Step 1
+        If ((Worksheets("list").Cells(j, 72).Value = "") And (Worksheets("list").Cells(j, 1).Value <> "")) Then
+                Worksheets("list").Rows(j).Delete
+                j = j - 1
+                rowscounter = rowscounter - 1
+        End If
+ Next j
+ 
+ For j = 2 To rowscountera Step 1
+        If ((Worksheets("allocated").Cells(j, 5).Value = "") And (Worksheets("allocated").Cells(j, 1).Value <> "")) Then
+                Worksheets("allocated").Rows(j).Delete
+                j = j - 1
+                rowscountera = rowscountera - 1
+        End If
+ Next j
+ 
+                
+ counter = 1
+ testi = 0
+ Worksheets("s").Cells.Clear
+ For j = rowscountera To 2 Step -1
+ testi = 0
+    For i = 1 To counter Step 1
+        If (Worksheets("allocated").Cells(j, 9).Value = Worksheets("s").Cells(i, 1).Value) Then
+                testi = 1
+        End If
+    Next i
+    If testi = 0 Then
+        Worksheets("s").Cells(counter, 1).Value = Worksheets("allocated").Cells(j, 9).Value
+        counter = counter + 1
+    Else
+        Worksheets("allocated").Rows(j).Delete
+        rowscountera = rowscountera - 1
+    End If
+ Next j
+ 
+ 
+ For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 6).Value
+    If str <> "" Then
+        str1 = "ÊÎÕíÕ ãÌÏÏ Ê˜äÓíä ¡ ÈÑÔÊ ÇÒ ÇÊãÇã ÓÑæíÓ ÏÑ ÈÎÔ ÊÚãíÑÇå"
+        size = Len(str1)
+        For s = 1 To Len(str) Step 1
+            str2 = Mid(str, s, size)
+            If str2 = str1 Then
+                Worksheets("allocated").Rows(i).Delete
+                i = i - 1
+                rowscountera = rowscountera - 1
+                GoTo sss:
+            End If
+        Next s
+    End If
+sss:
+Next i
+
+For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 6).Value
+    If str <> "" Then
+        str1 = "ÊÎÕíÕ ãÌÏÏ Ê˜äÓíä ¡ ÈÑÔÊ ÇÒ ÛíÑ ÞÇÈá ÊÚãíÑ ÏÑ ÈÎÔ ÊÚãíÑÇå"
+        size = Len(str1)
+        For s = 1 To Len(str) Step 1
+            str2 = Mid(str, s, size)
+            If str2 = str1 Then
+                Worksheets("allocated").Rows(i).Delete
+                i = i - 1
+                rowscountera = rowscountera - 1
+                GoTo ssss:
+            End If
+        Next s
+    End If
+ssss:
+Next i
+
+For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 6).Value
+    If str <> "" Then
+        str1 = "ÊÎÕíÕ ãÌÏÏ Ê˜äÓíä ¡ ÈÑÔÊ ÇÒ ÇíÑÇÏí ãÔÇåÏå äÔÏ ÏÑ ÈÎÔ ÊÚãíÑÇå"
+        size = Len(str1)
+        For s = 1 To Len(str) Step 1
+            str2 = Mid(str, s, size)
+            If str2 = str1 Then
+                Worksheets("allocated").Rows(i).Delete
+                i = i - 1
+                rowscountera = rowscountera - 1
+                GoTo sssss:
+            End If
+        Next s
+    End If
+sssss:
+Next i
+
+For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 6).Value
+    If str <> "" Then
+        str1 = "ÊÎÕíÕ ãÌÏÏ Ê˜äÓíä ¡ ÈÑÔÊ ÇÒ ãäÊÙÑ ÞØÚå æ ˜ã˜ Ýäí ÏÑ ÈÎÔ ÊÚãíÑÇå"
+        size = Len(str1)
+        For s = 1 To Len(str) Step 1
+            str2 = Mid(str, s, size)
+            If str2 = str1 Then
+                Worksheets("allocated").Rows(i).Delete
+                i = i - 1
+                rowscountera = rowscountera - 1
+                GoTo ssssss:
+            End If
+        Next s
+    End If
+ssssss:
+Next i
+
+For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 6).Value
+    If str <> "" Then
+        str1 = "ÊÎÕíÕ ãÌÏÏ Ê˜äÓíä ¡ ÈÑÔÊ ÇÒ ãäÊÙÑ ÞØÚå ÏÑ ÈÎÔ ÊÚãíÑÇå"
+        size = Len(str1)
+        For s = 1 To Len(str) Step 1
+            str2 = Mid(str, s, size)
+            If str2 = str1 Then
+                Worksheets("allocated").Rows(i).Delete
+                i = i - 1
+                rowscountera = rowscountera - 1
+                GoTo sssssss:
+            End If
+        Next s
+    End If
+sssssss:
+Next i
+
+For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 6).Value
+    If str <> "" Then
+        str1 = "ÊÎÕíÕ ãÌÏÏ Ê˜äÓíä ¡ ÍÓÈ ÊÇííÏ ãÔÊÑí ÈÑÇí ÓÑæíÓ ÏÓÊÇå"
+        size = Len(str1)
+        For s = 1 To Len(str) Step 1
+            str2 = Mid(str, s, size)
+            If str2 = str1 Then
+                Worksheets("allocated").Rows(i).Delete
+                i = i - 1
+                rowscountera = rowscountera - 1
+                GoTo ssssssss:
+            End If
+        Next s
+    End If
+ssssssss:
+Next i
+ 
+  For i = 2 To rowscounterr Step 1
+    For j = 2 To rowscounter Step 1
+        If (Worksheets("s").Cells(2, i).Value = Worksheets("list").Cells(j, 4).Value) Then
+                Worksheets("list").Rows(j).Delete
+                j = j - 1
+                rowscounter = rowscounter - 1
+        End If
+    Next j
+  Next i
+  
+  For i = 2 To rowscounterr Step 1
+    For j = 2 To rowscountera Step 1
+        If (Worksheets("s").Cells(2, i).Value = Worksheets("allocated").Cells(j, 9).Value) Then
+                Worksheets("allocated").Rows(j).Delete
+                j = j - 1
+                rowscountera = rowscountera - 1
+        End If
+    Next j
+  Next i
+  
+ 
+Worksheets("allocated").Cells(1, 72).Value = "ÊæÖíÍÇÊ æíŽå ÐíÑÔ"
+    For i = 2 To rowscountera Step 1
+        str = Worksheets("allocated").Cells(i, 4).Value
+        If str <> "" Then
+            For j = 2 To laptechnumbermix Step 1
+                size = Len(str)
+                str1 = Worksheets("Test Technician Form").Cells(j, 2).Value
+                    For s = 1 To Len(str1) Step 1
+                        str2 = Mid(str1, s, size)
+                        If str2 = str Then
+                            Worksheets("allocated").Cells(i, 72).Value = "TEST"
+                        End If
+                    Next s
+            Next j
+            
+            
+            For j = 2 To maintechnumbermix Step 1
+                size = Len(str)
+                str1 = Worksheets("Main Technician Form").Cells(j, 2).Value
+                    For s = 1 To Len(str1) Step 1
+                        str2 = Mid(str1, s, size)
+                        If str2 = str Then
+                            Worksheets("allocated").Cells(i, 72).Value = "MAIN"
+                        End If
+                    Next s
+            Next j
+            
+                For j = 2 To c4technumbermix Step 1
+                    size = Len(str)
+                    str1 = Worksheets("T4 Technician Form").Cells(j, 2).Value
+                        For s = 1 To Len(str1) Step 1
+                            str2 = Mid(str1, s, size)
+                            If str2 = str Then
+                                Worksheets("allocated").Cells(i, 72).Value = "T4"
+                            End If
+                        Next s
+                Next j
+                
+                 For j = 2 To mobiletechnumbermix Step 1
+                    size = Len(str)
+                    str1 = Worksheets("Mobile Technician Form").Cells(j, 2).Value
+                        For s = 1 To Len(str1) Step 1
+                            str2 = Mid(str1, s, size)
+                            If str2 = str Then
+                                Worksheets("allocated").Cells(i, 72).Value = "MOBILE"
+                            End If
+                        Next s
+                Next j
+        End If
+        If ((Worksheets("allocated").Cells(i, 72).Value = "") And (Worksheets("allocated").Cells(i, 1).Value <> "")) Then
+            Worksheets("allocated").Rows(i).Delete
+            i = i - 1
+            rowscountera = rowscountera - 1
+        End If
+    Next i
+
+
+Worksheets("s").Cells.Clear
+
+' (4) declare a new sheet (common)
+Worksheets("list").Copy after:=Worksheets("list")
+Worksheets("list (2)").Name = "Final List"
+Worksheets("allocated").Copy after:=Worksheets("allocated")
+Worksheets("allocated (2)").Name = "Final allocated"
+
+' (5) count all columns and rows in original sheet (common)
+rowscounter = Worksheets("Final List").Cells(Rows.Count, 1).End(xlUp).Row
+columnscounter = Worksheets("Final List").Cells(1, Columns.Count).End(xlToLeft).Column
+rowscountera = Worksheets("Final List").Cells(Rows.Count, 1).End(xlUp).Row
+columnscountera = Worksheets("Final List").Cells(1, Columns.Count).End(xlToLeft).Column
+
+' (6) edit a new sheet (common)
+
+Point = 0
+For rep = 1 To 5 Step 1
+    For counter = 1 To columnscountera Step 1
+        For counter1 = 1 To 10 Step 1
+            If Worksheets("Final allocated").Cells(1, counter).Value = Worksheets("Control").Cells(2, counter1).Value Then
+                Point = 1
+            End If
+        Next counter1
+        If (Point = 0) Then
+            Worksheets("Final allocated").Columns(counter).Delete
+            counter = counter - 1
+            columnscountera = columnscountera - 1
+        End If
+        Point = 0
+        If counter = columnscountera Then
+            GoTo ss:
+        End If
+    Next counter
+ss:
+Next rep
+
+Point = 0
+For rep = 1 To 5 Step 1
+For counter = 1 To columnscounter Step 1
+    For counter1 = 1 To 7 Step 1
+        If Worksheets("Final List").Cells(1, counter).Value = Worksheets("Control").Cells(2, counter1).Value Then
+        Point = 1
+        End If
+    Next counter1
+    If Point = 0 Then
+    Worksheets("Final List").Columns(counter).Delete
+    End If
+    Point = 0
+Next counter
+Next rep
+
+' (7) edit a new sheet (upper case columns G)   (common) ========Check=======
+    With Sheets("Final List")
+        For i = 1 To .Range("G" & Rows.Count).End(xlUp).Row
+            .Range("G" & i) = UCase(.Range("G" & i))
+        Next i
+    End With
+     With Sheets("Final allocated")
+        For i = 1 To .Range("E" & Rows.Count).End(xlUp).Row
+            .Range("E" & i) = UCase(.Range("E" & i))
+        Next i
+    End With
+
+' (8) edit a new sheet (Make Five list of main and test and t4 and mobile and tablet) (common)  =========Pro
+Worksheets("Final List").Copy after:=Worksheets("Final List")
+Worksheets("Final List (2)").Copy after:=Worksheets("Final List (2)")
+Worksheets("Final List (3)").Copy after:=Worksheets("Final List (3)")
+    For i = 1 To rowscounter Step 1
+        If (Worksheets("Final List").Cells(i, 7).Value = "MAIN") Or (Worksheets("Final List").Cells(i, 7).Value = "T4") Or (Worksheets("Final List").Cells(i, 7).Value = "MOBILE") Or (Worksheets("Final List").Cells(i, 7).Value = "TABLET") Then
+            Worksheets("Final List").Rows(i).Delete
+            i = i - 1
+        End If
+    Next i
+    For i = 1 To rowscounter Step 1
+        If (Worksheets("Final List (2)").Cells(i, 7).Value = "TEST") Or (Worksheets("Final List (2)").Cells(i, 7).Value = "T4") Or (Worksheets("Final List (2)").Cells(i, 7).Value = "MOBILE") Or (Worksheets("Final List (2)").Cells(i, 7).Value = "TABLET") Then
+            Worksheets("Final List (2)").Rows(i).Delete
+            i = i - 1
+        End If
+    Next i
+    For i = 1 To rowscounter Step 1
+        If (Worksheets("Final List (3)").Cells(i, 7).Value = "TEST") Or (Worksheets("Final List (3)").Cells(i, 7).Value = "MAIN") Or (Worksheets("Final List (3)").Cells(i, 7).Value = "MOBILE") Or (Worksheets("Final List (3)").Cells(i, 7).Value = "TABLET") Then
+            Worksheets("Final List (3)").Rows(i).Delete
+            i = i - 1
+        End If
+    Next i
+    For i = 1 To rowscounter Step 1
+        If (Worksheets("Final List (4)").Cells(i, 7).Value = "TEST") Or (Worksheets("Final List (4)").Cells(i, 7).Value = "MAIN") Or (Worksheets("Final List (4)").Cells(i, 7).Value = "T4") Then
+            Worksheets("Final List (4)").Rows(i).Delete
+            i = i - 1
+        End If
+    Next i
+Worksheets("Final List").Name = "Laptop List"
+Worksheets("Final List (2)").Name = "Main List"
+Worksheets("Final List (3)").Name = "C4 List"
+Worksheets("Final List (4)").Name = "Mobile List"
+
+' (9) searching for technician who had gotten apps before we allocated for test and main and t4 (common)
+
+For i = 2 To rowscountera Step 1
+    str = Worksheets("allocated").Cells(i, 4).Value
+    If str <> "" Then
+        For j = 2 To laptechnumbermix Step 1
+            size = Len(str)
+            str1 = Worksheets("Test Technician Form").Cells(j, 2).Value
+                For s = 1 To Len(str1) Step 1
+                    str2 = Mid(str1, s, size)
+                    If str2 = str Then
+                        Worksheets("Test Technician Form").Cells(j, 19).Value = Worksheets("Test Technician Form").Cells(j, 19).Value + 1
+                        Worksheets("Final allocated").Cells(i, 6).Value = Worksheets("Test Technician Form").Cells(j, 2).Value
+                    End If
+                Next s
+        Next j
+        
+        
+        For j = 2 To maintechnumbermix Step 1
+            size = Len(str)
+            str1 = Worksheets("Main Technician Form").Cells(j, 2).Value
+                For s = 1 To Len(str1) Step 1
+                    str2 = Mid(str1, s, size)
+                    If str2 = str Then
+                        Worksheets("Main Technician Form").Cells(j, 19).Value = Worksheets("Main Technician Form").Cells(j, 19).Value + 1
+                        Worksheets("Final allocated").Cells(i, 6).Value = Worksheets("Main Technician Form").Cells(j, 2).Value
+                    End If
+                Next s
+        Next j
+        
+        For j = 2 To c4technumbermix Step 1
+            size = Len(str)
+            str1 = Worksheets("T4 Technician Form").Cells(j, 2).Value
+                For s = 1 To Len(str1) Step 1
+                    str2 = Mid(str1, s, size)
+                    If str2 = str Then
+                        Worksheets("T4 Technician Form").Cells(j, 19).Value = Worksheets("T4 Technician Form").Cells(j, 19).Value + 1
+                        Worksheets("Final allocated").Cells(i, 6).Value = Worksheets("T4 Technician Form").Cells(j, 2).Value
+                    End If
+                Next s
+        Next j
+        
+        For j = 2 To mobiletechnumbermix Step 1
+            size = Len(str)
+            str1 = Worksheets("Mobile Technician Form").Cells(j, 2).Value
+                For s = 1 To Len(str1) Step 1
+                    str2 = Mid(str1, s, size)
+                    If str2 = str Then
+                        Worksheets("Mobile Technician Form").Cells(j, 19).Value = Worksheets("Mobile Technician Form").Cells(j, 19).Value + 1
+                        Worksheets("Final allocated").Cells(i, 6).Value = Worksheets("Mobile Technician Form").Cells(j, 2).Value
+                    End If
+                Next s
+        Next j
+    End If
+Next i
+
+For j = 2 To laptechnumbermix Step 1
+            If (Worksheets("Test Technician Form").Cells(j, 19).Value = "") Then
+                Worksheets("Test Technician Form").Cells(j, 19).Value = 0
+            End If
+        Next j
+ For j = 2 To maintechnumbermix Step 1
+            If (Worksheets("Main Technician Form").Cells(j, 19).Value = "") Then
+                Worksheets("Main Technician Form").Cells(j, 19).Value = 0
+            End If
+        Next j
+ For j = 2 To c4technumbermix Step 1
+            If (Worksheets("T4 Technician Form").Cells(j, 19).Value = "") Then
+                Worksheets("T4 Technician Form").Cells(j, 19).Value = 0
+            End If
+        Next j
+For j = 2 To mobiletechnumbermix Step 1
+            If (Worksheets("Mobile Technician Form").Cells(j, 19).Value = "") Then
+                Worksheets("Mobile Technician Form").Cells(j, 19).Value = 0
+            End If
+        Next j
+End Sub
+
+
+Sub Macro2()
+' (19) delete extra sheets
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("list").Delete
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("allocated").Delete
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("Laptop List").Delete
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("Main List").Delete
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("C4 List").Delete
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("Mobile List").Delete
+Application.DisplayAlerts = False 'switching off the alert button
+Worksheets("Final allocated").Delete
+
+For i = 1 To 3 Step 1
+    Worksheets("Final Lists").Columns("H").Delete
+    Worksheets("Final Lists").Columns("G").Delete
+Next i
+' (20)
+For i = 1 To 4 Step 1
+         Worksheets("Test Technician Form").Columns("S").Delete
+        Worksheets("Test Technician Form").Columns("T").Delete
+        Worksheets("Test Technician Form").Columns("U").Delete
+        Worksheets("Test Technician Form").Columns("V").Delete
+        Worksheets("Test Technician Form").Columns("W").Delete
+         Worksheets("Main Technician Form").Columns("S").Delete
+        Worksheets("Main Technician Form").Columns("T").Delete
+        Worksheets("Main Technician Form").Columns("U").Delete
+        Worksheets("Main Technician Form").Columns("V").Delete
+        Worksheets("Main Technician Form").Columns("W").Delete
+         Worksheets("T4 Technician Form").Columns("S").Delete
+        Worksheets("T4 Technician Form").Columns("T").Delete
+        Worksheets("T4 Technician Form").Columns("U").Delete
+        Worksheets("T4 Technician Form").Columns("V").Delete
+        Worksheets("T4 Technician Form").Columns("W").Delete
+         Worksheets("Mobile Technician Form").Columns("S").Delete
+        Worksheets("Mobile Technician Form").Columns("T").Delete
+        Worksheets("Mobile Technician Form").Columns("U").Delete
+        Worksheets("Mobile Technician Form").Columns("V").Delete
+        Worksheets("Mobile Technician Form").Columns("W").Delete
+Next i
+    Columns("A:A").EntireColumn.AutoFit
+    Columns("B:B").EntireColumn.AutoFit
+    Columns("C:C").EntireColumn.AutoFit
+    Columns("D:D").EntireColumn.AutoFit
+    Columns("E:E").EntireColumn.AutoFit
+    Columns("F:F").EntireColumn.AutoFit
+Application.ScreenUpdating = True
+Worksheets("Final Lists").Activate
+Worksheets("Final Lists").Select
+ActiveWindow.ScrollColumn = 1
+ActiveWindow.ScrollRow = 1
+End Sub
